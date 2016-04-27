@@ -5,12 +5,18 @@
  */
 package DBMaster;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -68,6 +74,27 @@ public class DBMaster extends Observable {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
             Logger.getLogger(DBMaster.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static BufferedImage getBlobFromDatabase(Blob b){
+        try {
+            byte[] blobBytes;
+            BufferedImage blobImage;
+            ByteArrayInputStream reader;
+            
+            blobBytes = b.getBytes(1, (int) b.length());
+            b.free();
+            
+            reader = new ByteArrayInputStream(blobBytes);
+            
+            blobImage = ImageIO.read(reader);
+            reader.close();
+            
+            return blobImage;            
+        } catch (SQLException | IOException ey) {
+            //UIHook here
+        }
+        return null;
     }
     
     public void initSession(){

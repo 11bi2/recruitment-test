@@ -53,10 +53,10 @@ public class main extends JFrame {
 		changeProgramStyle();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					main frame = new main();
-					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
+				try {      
+                                        main frame = new main();
+                                        frame.setLocationRelativeTo(null);
+                                        frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
