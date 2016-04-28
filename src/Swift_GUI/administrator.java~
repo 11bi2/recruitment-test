@@ -62,7 +62,7 @@ public class administrator {
 	/**
 	 * Launch the application.
 	 */
-	public static void AdministratorWindow() {
+	public static void main(String[] args) {
 		changeProgramStyle();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -200,7 +200,7 @@ public class administrator {
 		JLayeredPane layeredPane_2 = new JLayeredPane();
 		tabbedPane.addTab("Ergebnisse", null, layeredPane_2, null);
 		layeredPane_2.setLayout(new MigLayout("", "[][grow]", "[grow][][][][][][][]"));
-
+		
 		final JLabel lblAdawd = new JLabel("");
 		lblAdawd.setFont(new Font("Dialog", Font.PLAIN, 10));
 		layeredPane_2.add(lblAdawd, "flowx,cell 1 6,alignx right");
@@ -240,14 +240,14 @@ public class administrator {
 			public void keyPressed(KeyEvent arg0) {
 				if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE)
 					textField.setText("");
-				lblAdawd.setText(null);
+					lblAdawd.setText(null);
 
 			}
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				TableFiltering(table, textField.getText().trim());
 				if (textField.getText().trim().length() >= 1)
-					lblAdawd.setText("Es ist ein Filter aktiv. Es werden nicht alle Ergebnisse angezeigt.");
+				lblAdawd.setText("Es ist ein Filter aktiv. Es werden nicht alle Ergebnisse angezeigt.");
 			}
 			@Override
 			public void keyTyped(KeyEvent arg0) {	
@@ -360,4 +360,3 @@ public class administrator {
 		});
 	}
 }
-
