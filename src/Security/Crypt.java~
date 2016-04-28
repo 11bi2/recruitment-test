@@ -71,8 +71,7 @@ public class Crypt {
         try {
         
             if (configTxt.exists()) {
-                return Files.readAllLines(path, Charset.defaultCharset()).get(1);
-
+                return Files.readAllLines(path).get(1);
             }
         
         } catch (IOException ex) {
