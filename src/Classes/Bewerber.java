@@ -20,12 +20,13 @@ public class Bewerber {
     private String eMail;
     private String abschluss;
     private String berufsWahl;
+    private String assignedPassword;
     
     public Bewerber(){}
-    public Bewerber(String vorName, String nachName, int geburtsTag, String eMail, String abschluss, String berufswahl){
-        this(0, vorName, nachName, geburtsTag, eMail, abschluss, berufswahl);
+    public Bewerber(String vorName, String nachName, int geburtsTag, String eMail, String abschluss, String berufswahl, String assignedPassword){
+        this(0, vorName, nachName, geburtsTag, eMail, abschluss, berufswahl, assignedPassword);
     }
-    public Bewerber(int id, String vorName, String nachName, int geburtsTag, String eMail, String abschluss, String berufsWahl){
+    public Bewerber(int id, String vorName, String nachName, int geburtsTag, String eMail, String abschluss, String berufsWahl, String assignedPassword){
         this.id = id;
         this.vorName = vorName;
         this.nachName = nachName;
@@ -33,6 +34,7 @@ public class Bewerber {
         this.eMail = eMail;
         this.abschluss = abschluss;
         this.berufsWahl = berufsWahl;
+        this.assignedPassword = assignedPassword;
     }
 
     public int getId() {
@@ -77,6 +79,17 @@ public class Bewerber {
     public void setBerufsWahl(String berufsWahl) {
         this.berufsWahl = berufsWahl;
     }
+
+    public String getAssignedPassword() {
+        return assignedPassword;
+    }
+
+    public void setAssignedPassword(String assignedPassword) {
+        this.assignedPassword = assignedPassword;
+    }
+    
+    
+    
     
     public static Bewerber fromResultSet(ResultSet res){
         try {
@@ -84,7 +97,7 @@ public class Bewerber {
             return new Bewerber(
                     res.getInt(1), res.getString(2), res.getString(3), 
                     res.getInt(4), res.getString(5), res.getString(6), 
-                    res.getString(7));
+                    res.getString(7), res.getString(8));
             
         } catch (SQLException ex) {
             //UIHook here

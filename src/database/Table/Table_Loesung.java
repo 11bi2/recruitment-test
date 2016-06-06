@@ -21,8 +21,7 @@ public class Table_Loesung extends Table<Loesung> implements SQLExecution {
     
     private static Table_Loesung instance = null;
 
-    @Override
-    public Table getInstance() {
+    public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Loesung();
         }

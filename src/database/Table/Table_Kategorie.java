@@ -21,8 +21,7 @@ public class Table_Kategorie extends Table<Kategorie>  implements SQLExecution{
 
     private static Table_Kategorie instance = null;
     
-    @Override
-    public Table getInstance() {
+    public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Kategorie();
         }

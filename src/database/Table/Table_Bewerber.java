@@ -12,6 +12,8 @@ import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,8 +27,8 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
     
     private static Table_Bewerber instance = null;
     
-    @Override
-    public Table getInstance() {
+   
+    public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Bewerber();
         }
@@ -85,7 +87,23 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
     public void delete(Bewerber args) {
         executeQuery(SQLHelper.DELETE_BEWERBER_QUERY(args));
     } 
-
+    
+    public static boolean authenticate(String username, String password){
+        try {
+            String[] usernameSplit = username.split(" ");
+            ResultSet res = 
+                    DBMaster.getDatabase().getSession().
+                            prepareStatement(SQLHelper.AUTHENTICATE_BEWERBER(
+                                    usernameSplit[0], usernameSplit[1], password)
+                            ).executeQuery();
+            if (res.next()) {
+                return true;
+            }
+        } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
+            return false;
+        }
+        return false;
+    }
     @Override
     public ResultSet executeQuery(String query) {
         try {

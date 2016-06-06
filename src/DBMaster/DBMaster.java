@@ -5,6 +5,7 @@
  */
 package DBMaster;
 
+import Classes.SessionManager;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -63,9 +64,9 @@ public class DBMaster extends Observable {
         return true;
     }
     
-    public void startSession(String host, int port, String schema, String user, String password){
+    public void startSession(String host, int port, String user, String password){
         try {
-            this.url = "jdbc:mysql://" + host + ":" + port + "/" + schema;
+            this.url = "jdbc:mysql://" + host + ":" + port + "/cobra" ;
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             session = DriverManager.getConnection(url, user, password);
             this.setChanged();

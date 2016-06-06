@@ -25,8 +25,7 @@ public class Table_Eingabe extends Table<Eingabe> implements SQLExecution {
     
     private Table_Eingabe(){};
     
-    @Override
-    public Table getInstance() {
+    public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Eingabe();
         }

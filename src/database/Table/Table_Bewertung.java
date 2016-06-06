@@ -21,8 +21,7 @@ public class Table_Bewertung extends Table<Bewertung> implements SQLExecution {
     
     private static Table_Bewertung instance = null;
 
-    @Override
-    public Table getInstance() {
+    public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Bewertung();
         }

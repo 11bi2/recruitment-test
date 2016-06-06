@@ -1,5 +1,6 @@
 package Swift_GUI;
 
+import Classes.SessionManager;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -13,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
+
+import DBMaster.DBMaster;
+import database.Table.Table_Bewerber;
 
 
 public class authentication {
@@ -83,15 +87,30 @@ public class authentication {
 		field_user_password.setBounds(186, 212, 250, 19);
 		frame.getContentPane().add(field_user_password);
 
+                DBMaster.getDatabase().startSession("localhost", 3306, "root", "");
+                
 		JButton btnNewButton = new JButton("Verbindung aufbauen ...");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (field_user_id.getText().equals(field_user_password.getText()) == true)
-					JOptionPane.showMessageDialog(null, "Erfolgreich angemeldet.");
-				frame.dispose();
-				administrator nw = new administrator();
-				nw.AdministratorWindow();
-			}
+                            if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
+                                
+                                JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                           
+                            }else {
+                                
+                                boolean isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
+                                    if (isValidUser){
+                                            JOptionPane.showMessageDialog(null, "Erfolgreich angemeldet.");
+                                    SessionManager.getInstance();
+                                    frame.dispose();
+                                    administrator nw = new administrator();
+                                    nw.AdministratorWindow();
+                                    
+                                    }else{
+                                        JOptionPane.showMessageDialog(null, "Either your username or password are wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                            }
+                        }
 		});
 		btnNewButton.setBounds(218, 242, 218, 25);
 		frame.getContentPane().add(btnNewButton);

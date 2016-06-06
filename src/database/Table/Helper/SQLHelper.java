@@ -21,12 +21,12 @@ public class SQLHelper {
     //Constants
     
     //Tables
-    private static final String TABLE_BEWERBER = "Bewerber";
-    private static final String TABLE_KATEGORIE = "Kategorie";
-    private static final String TABLE_AUFGABE = "Aufgabe";
-    private static final String TABLE_BEWERTUNG = "Bewertung";
-    private static final String TABLE_LOESUNG = "Loesung";
-    private static final String TABLE_EINGABE = "Eingabe";
+    private static final String TABLE_BEWERBER = "bewerber";
+    private static final String TABLE_KATEGORIE = "kategorie";
+    private static final String TABLE_AUFGABE = "aufgaben";
+    private static final String TABLE_BEWERTUNG = "bewertung";
+    private static final String TABLE_LOESUNG = "loesung";
+    private static final String TABLE_EINGABE = "eingabe";
     private static final String TABLE_BEWERBER_AUFGABE = "Bewerber_Aufgabe";
     
     //Bewerber Columns
@@ -37,6 +37,7 @@ public class SQLHelper {
     private static final String KEY_BEWERBER_EMAIL = "EMail";
     private static final String KEY_BEWERBER_ABSCHLUSS = "Abschluss";
     private static final String KEY_BEWERBER_BERUFSWAHL = "Berufswahl";
+    private static final String KEY_BEWERBER_PASSWORD  = "Password";
     
     //Aufgaben Columsn
     private static final String KEY_AUFGABE_ID = "idAufgabe";
@@ -118,6 +119,13 @@ public class SQLHelper {
     
     public static String DELETE_BEWERBER_QUERY(Bewerber b){
         return "DELETE FROM " + TABLE_BEWERBER + " WHERE " + KEY_BEWERBER_ID + " = " + b.getId() + ";";
+    }
+    
+    public static String AUTHENTICATE_BEWERBER(String vorName, String nachName, String password){
+        return "SELECT * FROM " + TABLE_BEWERBER + " WHERE " +
+                KEY_BEWERBER_VORNAME + " = '" + vorName + "' AND " +
+                KEY_BEWERBER_NACHNAME + " = '" + nachName + "' AND " +
+                KEY_BEWERBER_PASSWORD + " = '" + password + "';";
     }
     
     /**

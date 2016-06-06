@@ -14,7 +14,6 @@ import java.util.ArrayList;
  */
 public abstract class Table<T> {
     
-    public abstract Table getInstance();
     public abstract void create(T args);
     public abstract Integer getLastInsertedId();
     public abstract T getEntry(int id);
