@@ -12,8 +12,6 @@ import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,9 +19,9 @@ import java.util.logging.Logger;
  */
 public class Table_Eingabe extends Table<Eingabe> implements SQLExecution {
 
-    private static Table_Eingabe instance = null;
-    
     private Table_Eingabe(){};
+    
+    private static Table_Eingabe instance = null;
     
     public static Table getInstance() {
         if (instance == null) {
@@ -35,12 +33,13 @@ public class Table_Eingabe extends Table<Eingabe> implements SQLExecution {
     @Override
     public void create(Eingabe args) {
         executeQuery(SQLHelper.INSERT_EINGABE_QUERY(args));
+        args.setId(this.getLastInsertedId());
     }
 
     @Override
     public Integer getLastInsertedId() {
         try {
-            return executeQuery(SQLHelper.GET_LAST_INSERTED_EINGABE_ID_QUERY())
+            return executeQuery(SQLHelper.GET_EINGABE_LAST_INSERTED_ID())
                     .getInt(1);
         } catch (SQLException ex) {
             //UIHook here
@@ -51,7 +50,7 @@ public class Table_Eingabe extends Table<Eingabe> implements SQLExecution {
     @Override
     public Eingabe getEntry(int id) {
         return Eingabe.fromResultSet(executeQuery(
-                SQLHelper.GET_EINGABE_QUERY(id)));
+                SQLHelper.GET_EINGABE_ENTRY_QUERY(id)));
  
     }
 
@@ -60,7 +59,7 @@ public class Table_Eingabe extends Table<Eingabe> implements SQLExecution {
         ArrayList<Eingabe> eingaben = new ArrayList();
         
         try{
-            ResultSet res = executeQuery(SQLHelper.GET_ALL_EINGABE_QUERY());
+            ResultSet res = executeQuery(SQLHelper.GET_ALL_EINGABE_ENTRY_QUERY());
             
             while(res.next()){
                 eingaben.add(Eingabe.fromResultSet(res));

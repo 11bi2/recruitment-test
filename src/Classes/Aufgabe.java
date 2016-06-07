@@ -16,21 +16,21 @@ import java.sql.SQLException;
 public class Aufgabe {
    
     private int id;
-    private int bewertungId;
+    private int idKategorie;
     private String aufgabenstellung;
     private Blob picture;
-    private String hilfestellung;
+    private int idAntwortMoeglichkeit;
     
     public Aufgabe(){}
-    public Aufgabe(int bewertungId, String aufgabenstellung, Blob picture, String hilfestellung){
-        this(0, bewertungId, aufgabenstellung, picture, hilfestellung);
+    public Aufgabe(int bewertungId, String aufgabenstellung, Blob picture, int idAntwortMoeglichkeit){
+        this(0, bewertungId, aufgabenstellung, picture, idAntwortMoeglichkeit);
     }
-    public Aufgabe(int id, int bewertungId, String aufgabenstellung, Blob picture, String hilfestellung){
+    public Aufgabe(int id, int bewertungId, String aufgabenstellung, Blob picture, int idAntwortMoeglichkeit){
         this.id = id;
-        this.bewertungId = bewertungId;
+        this.idKategorie = bewertungId;
         this.aufgabenstellung = aufgabenstellung;
         this.picture = picture;
-        this.hilfestellung = hilfestellung;
+        this.idAntwortMoeglichkeit = idAntwortMoeglichkeit;
     }
 
     public int getId() {
@@ -39,14 +39,6 @@ public class Aufgabe {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBewertungId() {
-        return bewertungId;
-    }
-
-    public void setBewertungId(int bewertungId) {
-        this.bewertungId = bewertungId;
     }
 
     public String getAufgabenstellung() {
@@ -65,17 +57,27 @@ public class Aufgabe {
         this.picture = picture;
     }
 
-    public String getHilfestellung() {
-        return hilfestellung;
+    public int getIdKategorie() {
+        return idKategorie;
     }
 
-    public void setHilfestellung(String hilfestellung) {
-        this.hilfestellung = hilfestellung;
+    public void setIdKategorie(int idKategorie) {
+        this.idKategorie = idKategorie;
     }
+
+    public int getIdAntwortMoeglichkeit() {
+        return idAntwortMoeglichkeit;
+    }
+
+    public void setIdAntwortMoeglichkeit(int idAntwortMoeglichkeit) {
+        this.idAntwortMoeglichkeit = idAntwortMoeglichkeit;
+    }
+
+
     
     public static Aufgabe fromResultSet(ResultSet res){
         try {
-            return new Aufgabe(res.getInt(1), res.getInt(2), res.getString(3), res.getBlob(4), res.getString(5));
+            return new Aufgabe(res.getInt(1), res.getInt(2), res.getString(3), res.getBlob(4), res.getInt(5));
         } catch (SQLException ex) {
             //UIHook here
         }

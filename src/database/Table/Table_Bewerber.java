@@ -21,13 +21,10 @@ import java.util.logging.Logger;
  */
 public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
     
-    private ResultSet results;
-    
-    public Table_Bewerber(){};
+    private Table_Bewerber(){};
     
     private static Table_Bewerber instance = null;
     
-   
     public static Table getInstance() {
         if (instance == null) {
             instance = new Table_Bewerber();
@@ -66,7 +63,7 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
         
         try {
             
-            results = executeQuery(SQLHelper.GET_ALL_BEWERBER_QUERY());
+            ResultSet results = executeQuery(SQLHelper.GET_ALL_BEWERBER_QUERY());
             
             while(results.next()){
                 bewerber.add(Bewerber.fromResultSet(results));

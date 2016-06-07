@@ -19,6 +19,8 @@ import java.util.ArrayList;
  */
 public class Table_Aufgabe extends Table<Aufgabe> implements SQLExecution {
 
+    private Table_Aufgabe(){};
+    
     private static Table_Aufgabe instance = null;
     
     public static Table getInstance() {

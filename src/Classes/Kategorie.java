@@ -16,7 +16,7 @@ import java.sql.Time;
 public class Kategorie {
     
     private int id;
-    private int bewerberID;
+    private int idBerufswahl;
     private int aufgabeID;
     private String kategorieBezeichnung;
     private Time verfuegbareZeit;
@@ -25,13 +25,13 @@ public class Kategorie {
         this(0, 0, 0, "", null);
     };
     
-    public Kategorie(int bewerberID, int aufgabeID, String kategorieBezeichnung, Time verfuegbareZeit){
-        this(0, bewerberID, aufgabeID, kategorieBezeichnung, verfuegbareZeit);
+    public Kategorie(int idBerufswahl, int aufgabeID, String kategorieBezeichnung, Time verfuegbareZeit){
+        this(0, idBerufswahl, aufgabeID, kategorieBezeichnung, verfuegbareZeit);
     }
     
-    public Kategorie(int id, int bewerberID, int aufgabeID, String kategorieBezeichnung, Time verfuegbareZeit){
+    public Kategorie(int id, int idBerfuswahl, int aufgabeID, String kategorieBezeichnung, Time verfuegbareZeit){
         this.id = id;
-        this.bewerberID = bewerberID;
+        this.idBerufswahl = idBerfuswahl;
         this.aufgabeID = aufgabeID;
         this.kategorieBezeichnung = kategorieBezeichnung;
         this.verfuegbareZeit = verfuegbareZeit;
@@ -43,11 +43,11 @@ public class Kategorie {
     public void setId(int id) {
         this.id = id;
     }
-    public int getBewerberID() {
-        return bewerberID;
+    public int getBerufswahlID() {
+        return idBerufswahl;
     }
-    public void setBewerberID(int bewerberID) {
-        this.bewerberID = bewerberID;
+    public void setBerufswahlID(int bewerberID) {
+        this.idBerufswahl = bewerberID;
     }
     public int getAufgabeID() {
         return aufgabeID;
