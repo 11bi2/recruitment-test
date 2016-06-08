@@ -93,10 +93,14 @@ public class authentication {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
                             if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
-                                
-                                JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                           
-                            }else {
+                
+                            	// Just for testing: Login without any login credentials.
+                            	 frame.dispose();
+                                 UserWindow uw = new UserWindow();
+                                 uw.UserWindow();
+                                // JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                               else {
                                 
                                 boolean isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
                                     if (isValidUser){
