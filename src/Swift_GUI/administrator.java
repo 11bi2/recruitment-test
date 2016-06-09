@@ -51,6 +51,7 @@ import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
+import javax.swing.JOptionPane;
 
 public class administrator {
 
@@ -333,23 +334,24 @@ public class administrator {
 		JButton btnErstellen = new JButton("Erstellen.");
 		btnErstellen.addActionListener((ActionEvent arg0) -> {
                     // ToDo: Check if input fields are empty. Only create applicants if fields are set.
-                    
-                    int permission;
-                    
-                    if (cbPermission.getSelectedItem().toString().equals("Administrator")) {
-                        permission = 1;
-                    }else {
-                        permission = 2;
-                    }
-                    
-                    Date bewerberBirthday = new Date(tfNewBewerberGeburtstag.getText());
-                    Bewerber newBewerber = new Bewerber(permission, 1, tfNewBewerberVorname.getText(), tfNewBewerberNachname.getText(), bewerberBirthday, tfNewBewerberEmail.getText(), 1, "1234");
-                    
-                    Table_Bewerber.getInstance().create(newBewerber);
-                    
                     try {
+                        int permission;
+
+                        if (cbPermission.getSelectedItem().toString().equals("Administrator")) {
+                            permission = 1;
+                        }else {
+                            permission = 2;
+                        }
+                        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy.MM.dd");
+
+                        Bewerber newBewerber = new Bewerber(permission, 1, tfNewBewerberVorname.getText(), tfNewBewerberNachname.getText(), myFormat.parse(tfNewBewerberGeburtstag.getText()), tfNewBewerberEmail.getText(), 1, "1234");
+
+                        Table_Bewerber.getInstance().create(newBewerber);
+
                         Mailer.sendMail(newBewerber);
-                    } catch (MessagingException ex) {
+                        
+                        JOptionPane.showMessageDialog(null, "Bewerber wurde erfolgreich erstellt und benarichtigt.", "Erfolg", JOptionPane.PLAIN_MESSAGE);
+                    } catch (MessagingException | ParseException ex) {
                         Logger.getLogger(administrator.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
@@ -364,6 +366,7 @@ public class administrator {
 					showMenu(e);
 				}
 			}
+                        @Override
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);

@@ -15,7 +15,9 @@ import javax.swing.UIManager;
 import javax.swing.JTextField;
 
 import DBMaster.DBMaster;
+import Database_Objects.Bewerber;
 import database.Table.Table_Bewerber;
+import java.awt.event.ActionListener;
 
 
 public class authentication {
@@ -88,7 +90,8 @@ public class authentication {
                 DBMaster.getDatabase().startSession("localhost", 3306, "root", "");
                 
 		JButton btnNewButton = new JButton("Verbindung aufbauen ...");
-		btnNewButton.addActionListener((ActionEvent arg0) -> {
+
+		/*btnNewButton.addActionListener((ActionEvent arg0) -> {
                     if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
                         
                         JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
@@ -105,6 +108,36 @@ public class authentication {
                             
                         }else{
                             JOptionPane.showMessageDialog(null, "Either your credentials are wrong or your account hasn't been activated by an administrator yet!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });*/
+                        
+		btnNewButton.addActionListener((ActionEvent arg0) -> {
+                    if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
+                        
+                        //TODO: User | Admin
+                        // Just for testing: Login without any login credentials.
+                        // JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else {
+                        
+                        Bewerber isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
+                        if (isValidUser != null){
+                            
+                            if (isValidUser.getIdPermisson() == 1) {
+                                JOptionPane.showMessageDialog(null, "Willkommen Administrator " + isValidUser.getVorName());
+                                SessionManager.getInstance();
+                                frame.dispose();
+                                administrator nw = new administrator();
+                                administrator.AdministratorWindow();
+                            }else {
+                                JOptionPane.showMessageDialog(null, "Willkommen " + isValidUser.getVorName() + " " + isValidUser.getNachName() + ".\nViel glück bei Ihrem Test!");
+                                frame.dispose();
+                                //UserWindow uw = new UserWindow(null);
+                                UserWindow.UserWindow(isValidUser, null);
+                            }
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Either your username or password are wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 });

@@ -95,7 +95,7 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
         executeUpdate(SQLHelper.DELETE_BEWERBER_QUERY(args));
     } 
     
-    public static boolean authenticate(String username, String password){
+    public static Bewerber authenticate(String username, String password){
         String vorname;
         String nachname;
         
@@ -116,14 +116,11 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
                             prepareStatement(SQLHelper.AUTHENTICATE_BEWERBER(
                                     vorname, nachname, password)
                             ).executeQuery();
-            if (res.next() && res.getInt(8) == 1) {
-                return true;
-            }
+            return Bewerber.fromResultSet(res);
             
         } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
-            return false;
+            return null;
         }
-        return false;
     }
     @Override
     public ResultSet executeQuery(String query) {

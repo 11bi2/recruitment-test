@@ -23,16 +23,17 @@ import javax.mail.internet.MimeMessage;
 public class Mailer {
     private static final String HOST = "localhost";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
     private static final String FROM = "admin@bewerbungstest.com";
     
     private static Properties props = System.getProperties();
     private static Session session;
     
     public static void sendMail(Bewerber b) throws MessagingException{
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.host", HOST);
-        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
         session = Session.getInstance(props, auth());
         
         
