@@ -1,6 +1,6 @@
 package Swift_GUI;
 
-import Classes.SessionManager;
+import Database_Objects.SessionManager;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
@@ -27,6 +26,7 @@ public class authentication {
 
 	/**
 	 * Launch the application.
+     * @param args
 	 * @throws UnsupportedLookAndFeelException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
@@ -34,17 +34,15 @@ public class authentication {
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					authentication window = new authentication();
-					window.frame.setLocationRelativeTo(null); // Open window in center of screen
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+                    try {
+                        authentication window = new authentication();
+                        window.frame.setLocationRelativeTo(null); // Open window in center of screen
+                        window.frame.setVisible(true);
+                    } catch (Exception e) {
+                        //Possible UIHook
+                    }
+                });
 	}
 
 	/**
@@ -90,28 +88,26 @@ public class authentication {
                 DBMaster.getDatabase().startSession("localhost", 3306, "root", "");
                 
 		JButton btnNewButton = new JButton("Verbindung aufbauen ...");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-                            if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
-                                
-                                JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                           
-                            }else {
-                                
-                                boolean isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
-                                    if (isValidUser){
-                                            JOptionPane.showMessageDialog(null, "Erfolgreich angemeldet.");
-                                    SessionManager.getInstance();
-                                    frame.dispose();
-                                    administrator nw = new administrator();
-                                    nw.AdministratorWindow();
-                                    
-                                    }else{
-                                        JOptionPane.showMessageDialog(null, "Either your username or password are wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                                    }
-                            }
+		btnNewButton.addActionListener((ActionEvent arg0) -> {
+                    if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
+                        
+                        JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                        
+                    }else {
+                        
+                        boolean isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
+                        if (isValidUser){
+                            JOptionPane.showMessageDialog(null, "Erfolgreich angemeldet.");
+                            SessionManager.getInstance();
+                            frame.dispose();
+                            administrator nw = new administrator();
+                            administrator.AdministratorWindow();
+                            
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Either your credentials are wrong or your account hasn't been activated by an administrator yet!", "Login Error", JOptionPane.ERROR_MESSAGE);
                         }
-		});
+                    }
+                });
 		btnNewButton.setBounds(218, 242, 218, 25);
 		frame.getContentPane().add(btnNewButton);
 		frame.setBounds(100, 100, 449, 312);

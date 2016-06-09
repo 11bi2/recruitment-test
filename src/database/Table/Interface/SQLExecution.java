@@ -13,4 +13,5 @@ import java.sql.ResultSet;
  */
 public interface SQLExecution {
     ResultSet executeQuery(String query);
+    void executeUpdate(String query);
 }

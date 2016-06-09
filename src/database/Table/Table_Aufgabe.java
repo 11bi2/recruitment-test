@@ -5,13 +5,15 @@
  */
 package database.Table;
 
-import Classes.Aufgabe;
+import Database_Objects.Aufgabe;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,7 +34,7 @@ public class Table_Aufgabe extends Table<Aufgabe> implements SQLExecution {
 
     @Override
     public void create(Aufgabe args) {
-        executeQuery(SQLHelper.INSERT_AUFGABE_QUERY(args));
+        executeUpdate(SQLHelper.INSERT_AUFGABE_QUERY(args));
         args.setId(getLastInsertedId());
     }
 
@@ -76,12 +78,12 @@ public class Table_Aufgabe extends Table<Aufgabe> implements SQLExecution {
 
     @Override
     public void update(Aufgabe args) {
-        executeQuery(SQLHelper.DELETE_AUFGABE_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_AUFGABE_QUERY(args));
     }
 
     @Override
     public void delete(Aufgabe args) {
-        executeQuery(SQLHelper.DELETE_AUFGABE_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_AUFGABE_QUERY(args));
     }
 
     @Override
@@ -93,6 +95,29 @@ public class Table_Aufgabe extends Table<Aufgabe> implements SQLExecution {
             //UIHook here
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res =  executeQuery(SQLHelper.GET_AUFGABE_COUNT_QUERY());
+        
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Aufgabe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareCall(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Aufgabe.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

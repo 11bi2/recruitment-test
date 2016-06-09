@@ -20,5 +20,6 @@ public abstract class Table<T> {
     public abstract ArrayList<T> getAllEntrys();
     public abstract void update(T args);
     public abstract void delete(T args);
+    public abstract int getCount();
     
 }

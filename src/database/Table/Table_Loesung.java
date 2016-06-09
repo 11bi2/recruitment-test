@@ -5,13 +5,15 @@
  */
 package database.Table;
 
-import Classes.Loesung;
+import Database_Objects.Loesung;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,7 +34,7 @@ public class Table_Loesung extends Table<Loesung> implements SQLExecution {
 
     @Override
     public void create(Loesung args) {
-        executeQuery(SQLHelper.INSERT_LOESUNG_QUERY(args));
+        executeUpdate(SQLHelper.INSERT_LOESUNG_QUERY(args));
     }
 
     @Override
@@ -71,12 +73,12 @@ public class Table_Loesung extends Table<Loesung> implements SQLExecution {
 
     @Override
     public void update(Loesung args) {
-        executeQuery(SQLHelper.UPDATE_LOESUNG_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_LOESUNG_QUERY(args));
     }
 
     @Override
     public void delete(Loesung args) {
-        executeQuery(SQLHelper.DELETE_LOESUNG_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_LOESUNG_QUERY(args));
     }
 
     @Override
@@ -88,6 +90,29 @@ public class Table_Loesung extends Table<Loesung> implements SQLExecution {
             //UIHook here
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_LOESUNG_COUNT_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Loesung.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Loesung.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

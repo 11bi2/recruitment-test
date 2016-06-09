@@ -5,7 +5,7 @@
  */
 package database.Table;
 
-import Classes.Permissions;
+import Database_Objects.Permissions;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
@@ -35,7 +35,7 @@ public class Table_Permissions extends Table<Permissions> implements SQLExecutio
     @Override
     public void create(Permissions args) {
         executeQuery(SQLHelper.INSERT_PERMISSION_QUERY(args));
-        args.setIdPermisson(this.getLastInsertedId());
+        args.setId(this.getLastInsertedId());
     }
 
     @Override
@@ -89,6 +89,29 @@ public class Table_Permissions extends Table<Permissions> implements SQLExecutio
             Logger.getLogger(Table_Permissions.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_PERMISSIONS_COUNT_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Permissions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Permissions.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

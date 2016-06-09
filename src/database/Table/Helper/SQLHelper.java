@@ -5,15 +5,20 @@
  */
 package database.Table.Helper;
 
-import Classes.Antwortmoeglichkeit;
-import Classes.Aufgabe;
-import Classes.Berufswahl;
-import Classes.Bewerber;
-import Classes.Eingabe;
-import Classes.Kategorie;
-import Classes.Loesung;
-import Classes.Permissions;
-import Classes.Schwierigkeit;
+import Database_Objects.Antwortmoeglichkeit;
+import Database_Objects.Aufgabe;
+import Database_Objects.Berufswahl;
+import Database_Objects.Bewerber;
+import Database_Objects.Eingabe;
+import Database_Objects.Ergebnis;
+import Database_Objects.Kategorie;
+import Database_Objects.Loesung;
+import Database_Objects.Permissions;
+import Database_Objects.Schwierigkeit;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
@@ -23,16 +28,20 @@ public class SQLHelper {
     
     //Constants
     
+    //Date Formatter
+    private static final SimpleDateFormat STANDARD_DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd");
+    
     //Tables
     private static final String TABLE_ANTWORTMOEGLICHKEITEN = "antwortmoeglichkeiten";
     private static final String TABLE_AUFGABE = "aufgaben";
     private static final String TABLE_BERUFSWAHL = "berufswahl";
     private static final String TABLE_BEWERBER = "bewerber";
     private static final String TABLE_EINGABE = "eingabe";
-    private static final String TABLE_KATEGORIE = "kategorie";
+    private static final String TABLE_KATEGORIE = "kategorien";
     private static final String TABLE_LOESUNG = "loesung";
     private static final String TABLE_PERMISSIONS = "permissions";
     private static final String TABLE_SCHWIERIGKEIT = "schwierigkeit";
+    private static final String TABLE_ERGEBNIS = "ergebnis";
     
     //Antwortmoeglichkeiten Columns
     private static final String KEY_ANTWORTMOEGLICHKEITEN_ID = "ID_Antwortmoeglichkeit";
@@ -95,6 +104,13 @@ public class SQLHelper {
     private static final String KEY_SCHWIERIGKEIT_ERREICHTE_PUNKTZAHL = "erreichte_punktzahl";
     private static final String KEY_SCHWIERIGKEIT_MOEGLICHE_PUNKTZAHL = "moegliche_punktzahl";
   
+    
+    //Ergebnis Columns
+    private static final String KEY_ERGEBNIS_ID = "id_ergebnis";
+    private static final String KEY_ERGEBNIS_BEWERBER_ID = "id_Bewerber";
+    private static final String KEY_ERGEBNIS_DATUM = "datum";
+    private static final String KEY_ERGEBNIS_PUNKTZAHL = "punktzahl";
+    private static final String KEY_ERGEBNIS_ERGEBNIS = "ergebnis";
     /**
      * #########################################################################
      * Antwortmoeglichkeit Querys
@@ -142,12 +158,17 @@ public class SQLHelper {
                 KEY_ANTWORTMOEGLICHKEITEN_ANTWORTMOEGLICHKEIT3 + " = '" + a.getAntwortMoeglichkeit3() + "', " +
                 KEY_ANTWORTMOEGLICHKEITEN_ANTWORTMOEGLICHKEIT4 + " = '" + a.getAntwortMoeglichkeit4() + "', " +
                 KEY_ANTWORTMOEGLICHKEITEN_ANTWORTMOEGLICHKEIT5 + " = '" + a.getAntwortMoeglichkeit5() + "' " +
-                "WHERE " + KEY_ANTWORTMOEGLICHKEITEN_ID + " = '" + a.getIdAntwortMoeglichkeit() + "';";
+                "WHERE " + KEY_ANTWORTMOEGLICHKEITEN_ID + " = '" + a.getId() + "';";
                 }
     
     public static String DELETE_ANTWORTMOEGLICHKEIT_QUERY(Antwortmoeglichkeit a){
         return "DELETE FROM " + TABLE_ANTWORTMOEGLICHKEITEN + " WHERE " +
-                KEY_ANTWORTMOEGLICHKEITEN_ID + " = '" + a.getIdAntwortMoeglichkeit() + "';";
+                KEY_ANTWORTMOEGLICHKEITEN_ID + " = '" + a.getId() + "';";
+    }
+    
+    public static String GET_ANTWORTMOEGLICHKEIT_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_ANTWORTMOEGLICHKEITEN_ID +  ")FROM " +
+        TABLE_ANTWORTMOEGLICHKEITEN + ";";
     }
     
         /**
@@ -200,6 +221,11 @@ public class SQLHelper {
                 "WHERE " + KEY_AUFGABE_ID + " = '" + a.getId() + "';";
     }
     
+    public static String GET_AUFGABE_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_AUFGABE_ID +  ")FROM " +
+        TABLE_AUFGABE + ";";
+    }
+    
     /**
      * #########################################################################
      * Berufswahl Columns
@@ -233,13 +259,18 @@ public class SQLHelper {
         return "UPDATE " + TABLE_BERUFSWAHL + " SET " +
                 KEY_BERUFSWAHL_BERUFSBESCHREIBUNG + " = '" + b.getBerufsBeschreibung()+ "', " +
                 KEY_BERUFSWAHL_VORAUSSETZUNG + " = '" + b.getVoraussetzung()+ "' " +
-                "WHERE " + KEY_BERUFSWAHL_ID + " = '" + b.getIdBerufswahl()+ "';";
+                "WHERE " + KEY_BERUFSWAHL_ID + " = '" + b.getId()+ "';";
     }
      
      public static String DELETE_BERUFSWAHL_QUERY(Berufswahl b){
          return "DELETE FROM " + TABLE_BERUFSWAHL + " WHERE " + " " +
-                 "WHERE " + KEY_BERUFSWAHL_ID + " = '" + b.getIdBerufswahl() + "';";
+                 "WHERE " + KEY_BERUFSWAHL_ID + " = '" + b.getId() + "';";
      }
+     
+     public static String GET_BERUFSWAHL_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_BERUFSWAHL_ID +  ")FROM " +
+        TABLE_BERUFSWAHL + ";";
+    }
    
     /**
    *############################################################################
@@ -247,44 +278,42 @@ public class SQLHelper {
    *############################################################################
    */
     
-    public static String INSERT_BEWERBER_QUERY(Bewerber b){
+    public static String INSERT_BEWERBER_QUERY(Bewerber b) throws ParseException{
+        Date givenDate = b.getGeburtsTag();
+        
         return "INSERT INTO " + TABLE_BEWERBER +
                 " (" + 
-                KEY_BEWERBER_BERUFSWAHLID + ", " +
                 KEY_BEWERBER_PERMISSION_ID + ", " +
+                KEY_BEWERBER_BERUFSWAHLID + ", " +
                 KEY_BEWERBER_VORNAME + ", " +
                 KEY_BEWERBER_NACHNAME + ", " +
                 KEY_BEWERBER_GEBURTSTAG + ", " +
                 KEY_BEWERBER_EMAIL + ", " + 
-                KEY_BEWERBER_PERMISSION + ", " +
-                KEY_BEWERBER_CREATED + ", " +
                 KEY_BEWERBER_FREIGABE + ", " +
                 KEY_BEWERBER_PASSWORD +
                 ") VALUES('" +
-                    b.getIdBerufswahl() + "', '" +
                     b.getIdPermisson() + "', '" +
+                    b.getIdBerufswahl() + "', '" +
                     b.getVorName() + "', '" +
                     b.getNachName() + "', '" +
-                    b.getGeburtsTag() + "', '" +
+                    STANDARD_DATE_FORMAT.format(givenDate) + "', '" +
                     b.geteMail() + "', '" +
-                    b.getPermission()+ "', '" +
-                    b.getCreated()+ "', '" +
                     b.getFreigabe() + "', '" +
                     b.getAssignedPassword() + 
                 "');";
     }
     
     public static String GET_LAST_INSERT_BEWERBER_ID_QUERY(){
-        return "SELECT LAST_INSERT_ID() FROM '" + TABLE_BEWERBER + "';";
+        return "SELECT LAST_INSERT_ID() FROM " + TABLE_BEWERBER + ";";
     }
     
     public static String GET_BEWERBER_QUERY(int id){
         return "SELECT * FROM '" + TABLE_BEWERBER + 
-               "' WHERE '" + KEY_BEWERBER_ID + "' = '" + id + "';";
+               "' WHERE " + KEY_BEWERBER_ID + " = '" + id + "';";
     }
     
     public static String GET_ALL_BEWERBER_QUERY(){
-        return "SELECT * FROM '" + TABLE_BEWERBER +"';";
+        return "SELECT * FROM " + TABLE_BEWERBER +";";
     }
     
     public static String UPDATE_BEWERBER_QUERY(Bewerber b){
@@ -295,8 +324,6 @@ public class SQLHelper {
                 KEY_BEWERBER_NACHNAME + " = '" + b.getNachName() + "', " +
                 KEY_BEWERBER_GEBURTSTAG + " = '" + b.getGeburtsTag() + "', " +
                 KEY_BEWERBER_EMAIL + " = '" + b.geteMail() + "', " +
-                KEY_BEWERBER_PERMISSION + " = '" + b.getPermission() + "', " +
-                KEY_BEWERBER_CREATED + " = '" + b.getCreated() + "', " +
                 KEY_BEWERBER_FREIGABE + " = '" + b.getFreigabe() + "', " +
                 KEY_BEWERBER_PASSWORD + " = '" + b.getAssignedPassword() + "' " +
                 "WHERE " + KEY_BEWERBER_ID + " = '" + b.getId() +"';";
@@ -307,10 +334,15 @@ public class SQLHelper {
     }
     
     public static String AUTHENTICATE_BEWERBER(String vorName, String nachName, String password){
-        return "SELECT * FROM " + TABLE_BEWERBER + " WHERE '" +
-                KEY_BEWERBER_VORNAME + "' = '" + vorName + "' AND '" +
-                KEY_BEWERBER_NACHNAME + "' = '" + nachName + "' AND '" +
-                KEY_BEWERBER_PASSWORD + "' = '" + password + "';";
+        return "SELECT * FROM " + TABLE_BEWERBER + " WHERE " +
+                KEY_BEWERBER_VORNAME + " = '" + vorName + "' AND " +
+                KEY_BEWERBER_NACHNAME + " = '" + nachName + "' AND " +
+                KEY_BEWERBER_PASSWORD + " = '" + password + "';";
+    }
+    
+    public static String GET_BEWERBER_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_BEWERBER_ID +  ")FROM " +
+        TABLE_BEWERBER + ";";
     }
     
     /**
@@ -352,7 +384,10 @@ public class SQLHelper {
                 "WHERE " + KEY_EINGABE_ID + " = '" + e.getId() + ";";
     }
     
-    
+    public static String GET_EINGABE_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_EINGABE_ID +  ")FROM " +
+        TABLE_EINGABE + ";";
+    }
   
     /**
      *##########################################################################
@@ -402,6 +437,11 @@ public class SQLHelper {
                 "WHERE " + KEY_KATEGORIE_ID + " = " + k.getId() + ";";
     }
     
+    public static String GET_KATEGORIE_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_KATEGORIE_ID +  ")FROM " +
+        TABLE_KATEGORIE + ";";
+    }
+    
     /**
      *##########################################################################
      * Loesung Querys
@@ -444,6 +484,11 @@ public class SQLHelper {
                 "WHERE " + KEY_LOESUNG_ID + " = " + l.getId() + ";";
     }
     
+    public static String GET_LOESUNG_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_LOESUNG_ID +  ")FROM " +
+        TABLE_LOESUNG + ";";
+    }
+    
     /**
      * #########################################################################
      * Permissions Querys
@@ -472,12 +517,17 @@ public class SQLHelper {
     public static String UPDATE_PERMISSIONS_QUERY(Permissions p){
         return "UPDATE " + TABLE_PERMISSIONS + " SET " +
                 KEY_PERMISSIONS_DESCRIPTION + " = '" + p.getDescription() + "' " +
-                "WHERE " + KEY_PERMISSIONS_ID + " = '" + p.getIdPermisson() + "';";
+                "WHERE " + KEY_PERMISSIONS_ID + " = '" + p.getId() + "';";
     }
     
     public static String DELETE_PERMISSIONS_QUERY(Permissions p){
         return "DELETE FROM " + TABLE_PERMISSIONS + " " +
-                "WHERE " + KEY_PERMISSIONS_ID + " = '" + p.getIdPermisson() + "';";
+                "WHERE " + KEY_PERMISSIONS_ID + " = '" + p.getId() + "';";
+    }
+    
+    public static String GET_PERMISSIONS_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_PERMISSIONS_ID +  ")FROM " +
+        TABLE_PERMISSIONS + ";";
     }
     
     /**
@@ -514,11 +564,66 @@ public class SQLHelper {
                 KEY_SCHWIERIGKEIT_AUFGABE_ID + " = '" + s.getIdAufgabe() + "', " +
                 KEY_SCHWIERIGKEIT_ERREICHTE_PUNKTZAHL + " = '" + s.getErreichtePunktzahl() + "', " +
                 KEY_SCHWIERIGKEIT_MOEGLICHE_PUNKTZAHL + " = '" + s.getMoeglichePunktzahl() + "' " +
-                "WHERE " + KEY_SCHWIERIGKEIT_ID + " = '" + s.getIdSchwierigkeit() + "';";
+                "WHERE " + KEY_SCHWIERIGKEIT_ID + " = '" + s.getId() + "';";
     }
     
     public static String DELETE_SCHWIERIGKEIT_QUERY(Schwierigkeit s){
         return "DELETE FROM " + TABLE_SCHWIERIGKEIT + " WHERE " +
-                KEY_SCHWIERIGKEIT_ID + " = '" + s.getIdSchwierigkeit() + "';";
+                KEY_SCHWIERIGKEIT_ID + " = '" + s.getId() + "';";
+    }
+    
+    public static String GET_SCHWIERIGKEIT_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_SCHWIERIGKEIT_ID +  ")FROM " +
+        TABLE_SCHWIERIGKEIT + ";";
+    }
+    
+    /**
+     * #########################################################################
+     * Ergebnis Query
+     * #########################################################################
+     */
+    
+        public static String INSERT_ERGEBNIS_QUERY(Ergebnis e){
+        return "INSERT INTO " + TABLE_ERGEBNIS + " (" +
+                KEY_ERGEBNIS_BEWERBER_ID + ", " +
+                KEY_ERGEBNIS_DATUM + ", " +
+                KEY_ERGEBNIS_PUNKTZAHL + ", " +
+                KEY_ERGEBNIS_ERGEBNIS + ") values('" +
+                e.getId_Bewerber() + "', " +
+                e.getPruefungsDatum() + "', " +
+                e.getPunktzahl()+ "', " +
+                e.getErgebnis()+ "');";
+    }
+    
+    public static String GET_LAST_INSERTED_ERGEBNIS_QUERY(){
+        return "SELECT GET_LAST_INSERT_ID() FROM " + TABLE_ERGEBNIS + ";";
+    }
+    
+    public static String GET_ERGEBNIS_ENTRY_QUERY(int id){
+        return "SELECT * FROM " + TABLE_ERGEBNIS + " " +
+                "WHERE " + KEY_ERGEBNIS_ID + " = '" + id + "';";
+    }
+    
+    public static String GET_ALL_ERGEBNIS_ENTRY_QUERY(){
+        return "SELECT * FROM " + TABLE_ERGEBNIS + ";";
+    }
+    
+    public static String UPDATE_ERGEBNIS_QUERY(Ergebnis e){
+        return "UPDATE " + TABLE_ERGEBNIS + " SET " +
+                KEY_ERGEBNIS_BEWERBER_ID + " = '" + e.getId_Bewerber() + "', " +
+                KEY_ERGEBNIS_DATUM + " = '" + e.getPruefungsDatum()+ "', " +
+                KEY_ERGEBNIS_PUNKTZAHL + " = '" + e.getPunktzahl()+ "' " +
+                KEY_ERGEBNIS_ERGEBNIS + " = '" + e.getErgebnis()+ "' " +
+                "WHERE " + KEY_ERGEBNIS_ID + " = '" + e.getId() + "';";
+    }
+    
+    public static String DELETE_ERGEBNIS_QUERY(Ergebnis e){
+        return "DELETE FROM " + TABLE_ERGEBNIS + " WHERE " +
+                KEY_ERGEBNIS_ID + " = '" + e.getId() + "';";
+    }
+    
+    public static String GET_ERGEBNIS_COUNT_QUERY(){
+        return "SELECT COUNT(" + KEY_ERGEBNIS_ID +  ")FROM " +
+        TABLE_ERGEBNIS + ";";
     }
 }

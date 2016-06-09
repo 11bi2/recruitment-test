@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Database_Objects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,26 +16,24 @@ import java.util.logging.Logger;
  */
 public class Schwierigkeit {
     
-    private int idSchwierigkeit;
+    private int id;
     private int idAufgabe;
     private int erreichtePunktzahl;
     private int moeglichePunktzahl;
 
     public Schwierigkeit(int idSchwierigkeit, int idAufgabe, int erreichtePunktzahl, int moeglichePunktzahl) {
-        this.idSchwierigkeit = idSchwierigkeit;
+        this.id = idSchwierigkeit;
         this.idAufgabe = idAufgabe;
         this.erreichtePunktzahl = erreichtePunktzahl;
         this.moeglichePunktzahl = moeglichePunktzahl;
     }
-
     
-    
-    public int getIdSchwierigkeit() {
-        return idSchwierigkeit;
+    public int getId() {
+        return id;
     }
 
-    public void setIdSchwierigkeit(int idSchwierigkeit) {
-        this.idSchwierigkeit = idSchwierigkeit;
+    public void setId(int idSchwierigkeit) {
+        this.id = idSchwierigkeit;
     }
 
     public int getIdAufgabe() {

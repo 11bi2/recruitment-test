@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Database_Objects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,20 +16,20 @@ import java.util.logging.Logger;
  */
 public class Permissions {
     
-    private int idPermisson;
+    private int id;
     private String description;
     
     public Permissions(int idPermission, String description){
-        this.idPermisson = idPermission;
+        this.id = idPermission;
         this.description = description;
     }
 
-    public int getIdPermisson() {
-        return idPermisson;
+    public int getId() {
+        return id;
     }
 
-    public void setIdPermisson(int idPermisson) {
-        this.idPermisson = idPermisson;
+    public void setId(int idPermisson) {
+        this.id = idPermisson;
     }
 
     public String getDescription() {

@@ -5,7 +5,7 @@
  */
 package database.Table;
 
-import Classes.Berufswahl;
+import Database_Objects.Berufswahl;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
@@ -34,8 +34,8 @@ public class Table_Berufswahl extends Table<Berufswahl> implements SQLExecution 
 
     @Override
     public void create(Berufswahl args) {
-        executeQuery(SQLHelper.INSERT_BERUFSWAHL_QUERY(args));
-        args.setIdBerufswahl(this.getLastInsertedId());
+        executeUpdate(SQLHelper.INSERT_BERUFSWAHL_QUERY(args));
+        args.setId(this.getLastInsertedId());
     }
 
     @Override
@@ -73,12 +73,12 @@ public class Table_Berufswahl extends Table<Berufswahl> implements SQLExecution 
 
     @Override
     public void update(Berufswahl args) {
-        executeQuery(SQLHelper.UPDATE_BERUFSWAHL_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_BERUFSWAHL_QUERY(args));
     }
 
     @Override
     public void delete(Berufswahl args) {
-        executeQuery(SQLHelper.DELETE_BERUFSWAHL_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_BERUFSWAHL_QUERY(args));
     }
 
     @Override
@@ -89,6 +89,29 @@ public class Table_Berufswahl extends Table<Berufswahl> implements SQLExecution 
             Logger.getLogger(Table_Berufswahl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_BERUFSWAHL_COUNT_QUERY());
+        
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Berufswahl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Berufswahl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

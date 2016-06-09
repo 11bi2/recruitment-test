@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Database_Objects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 /**
  *
@@ -18,14 +19,23 @@ public class Bewerber {
     private int idPermisson;
     private String vorName;
     private String nachName;
-    private int geburtsTag;
+    private Date geburtsTag;
     private String eMail;
-    private int permission;
-    private int created;
     private int freigabe;
     private String assignedPassword;
 
-    public Bewerber(int id, int idBerufswahl, int idPermisson, String vorName, String nachName, int geburtsTag, String eMail, int permission, int created, int freigabe, String assignedPassword) {
+    public Bewerber(int idPermission, int idBerufswahl, String vorName, String nachName, Date geburtsTag, String eMail, int freigabe, String assignedPassword) {
+        this.idBerufswahl = idBerufswahl;
+        this.idPermisson = idPermission;
+        this.vorName = vorName;
+        this.nachName = nachName;
+        this.geburtsTag = geburtsTag;
+        this.eMail = eMail;
+        this.freigabe = freigabe;
+        this.assignedPassword = assignedPassword;
+    }
+
+    public Bewerber(int id, int idBerufswahl, int idPermisson, String vorName, String nachName, Date geburtsTag, String eMail, int freigabe, String assignedPassword) {
         this.id = id;
         this.idBerufswahl = idBerufswahl;
         this.idPermisson = idPermisson;
@@ -33,13 +43,11 @@ public class Bewerber {
         this.nachName = nachName;
         this.geburtsTag = geburtsTag;
         this.eMail = eMail;
-        this.permission = permission;
-        this.created = created;
         this.freigabe = freigabe;
         this.assignedPassword = assignedPassword;
     }
     
-
+    
 
     public int getId() {
         return id;
@@ -81,11 +89,11 @@ public class Bewerber {
         this.nachName = nachName;
     }
 
-    public int getGeburtsTag() {
+    public Date getGeburtsTag() {
         return geburtsTag;
     }
 
-    public void setGeburtsTag(int geburtsTag) {
+    public void setGeburtsTag(Date geburtsTag) {
         this.geburtsTag = geburtsTag;
     }
 
@@ -95,22 +103,6 @@ public class Bewerber {
 
     public void seteMail(String eMail) {
         this.eMail = eMail;
-    }
-
-    public int getPermission() {
-        return permission;
-    }
-
-    public void setPermission(int permission) {
-        this.permission = permission;
-    }
-
-    public int getCreated() {
-        return created;
-    }
-
-    public void setCreated(int created) {
-        this.created = created;
     }
 
     public int getFreigabe() {
@@ -131,9 +123,7 @@ public class Bewerber {
     
     public static Bewerber fromResultSet(ResultSet res){
         try {
-            
-            return new Bewerber(res.getInt(1), res.getInt(2), res.getInt(3), res.getString(4), res.getString(5), res.getInt(6), res.getString(7), res.getInt(8), res.getInt(9), res.getInt(10), res.getString(11));
-            
+                return new Bewerber(res.getInt(1), res.getInt(2), res.getInt(3), res.getString(4), res.getString(5), res.getDate(6), res.getString(7), res.getInt(8), res.getString(9));            
         } catch (SQLException ex) {
             //UIHook here
         }

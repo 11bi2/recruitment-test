@@ -5,7 +5,7 @@
  */
 package database.Table;
 
-import Classes.Schwierigkeit;
+import Database_Objects.Schwierigkeit;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
@@ -34,8 +34,8 @@ public class Table_Schwierigkeit extends Table<Schwierigkeit> implements SQLExec
     
     @Override
     public void create(Schwierigkeit args) {
-        executeQuery(SQLHelper.INSERT_SCHWIERIGKEIT_QUERY(args));
-        args.setIdSchwierigkeit(this.getLastInsertedId());
+        executeUpdate(SQLHelper.INSERT_SCHWIERIGKEIT_QUERY(args));
+        args.setId(this.getLastInsertedId());
     }
 
     @Override
@@ -71,12 +71,12 @@ public class Table_Schwierigkeit extends Table<Schwierigkeit> implements SQLExec
 
     @Override
     public void update(Schwierigkeit args) {
-        executeQuery(SQLHelper.UPDATE_SCHWIERIGKEIT_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_SCHWIERIGKEIT_QUERY(args));
     }
 
     @Override
     public void delete(Schwierigkeit args) {
-        executeQuery(SQLHelper.DELETE_SCHWIERIGKEIT_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_SCHWIERIGKEIT_QUERY(args));
     }
 
     @Override
@@ -87,6 +87,29 @@ public class Table_Schwierigkeit extends Table<Schwierigkeit> implements SQLExec
             Logger.getLogger(Table_Schwierigkeit.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_SCHWIERIGKEIT_COUNT_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Schwierigkeit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Schwierigkeit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

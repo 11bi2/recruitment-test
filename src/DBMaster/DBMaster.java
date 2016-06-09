@@ -5,10 +5,8 @@
  */
 package DBMaster;
 
-import Classes.SessionManager;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -18,6 +16,7 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -73,7 +72,7 @@ public class DBMaster extends Observable {
             this.notifyObservers();
             
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) {
-            Logger.getLogger(DBMaster.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Database connection could'nt be established!", "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     

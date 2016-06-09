@@ -6,11 +6,12 @@
 package database.Table;
 
 import database.Table.Helper.SQLHelper;
-import Classes.Bewerber;
+import Database_Objects.Bewerber;
 import DBMaster.DBMaster;
 import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,12 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
 
     @Override
     public void create(Bewerber args){  
-        executeQuery(SQLHelper.INSERT_BEWERBER_QUERY(args));    
+        try {
+            executeUpdate(SQLHelper.INSERT_BEWERBER_QUERY(args));
+        } catch (ParseException ex) {
+            Logger.getLogger(Table_Bewerber.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //executeQuery(SQLHelper.INSERT_BEWERBER_QUERY(args)); 
         args.setId(this.getLastInsertedId());
     }
 
@@ -42,8 +48,13 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
     public Integer getLastInsertedId() {
         
         try {
-            return executeQuery(SQLHelper.GET_LAST_INSERT_BEWERBER_ID_QUERY())
-                    .getInt(1);
+            
+            
+            ResultSet res = executeQuery(SQLHelper.GET_LAST_INSERT_BEWERBER_ID_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
         
         } catch (SQLException ex) {
             //UI Hook here
@@ -53,8 +64,7 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
 
     @Override
     public Bewerber getEntry(int id) {
-        return Bewerber.fromResultSet(executeQuery(
-                SQLHelper.GET_BEWERBER_QUERY(id)));
+        return Bewerber.fromResultSet(executeQuery(SQLHelper.GET_BEWERBER_QUERY(id)));
     }
 
     @Override
@@ -77,25 +87,39 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
 
     @Override
     public void update(Bewerber args) {
-        executeQuery(SQLHelper.UPDATE_BEWERBER_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_BEWERBER_QUERY(args));
     }
 
     @Override
     public void delete(Bewerber args) {
-        executeQuery(SQLHelper.DELETE_BEWERBER_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_BEWERBER_QUERY(args));
     } 
     
     public static boolean authenticate(String username, String password){
+        String vorname;
+        String nachname;
+        
         try {
-            String[] usernameSplit = username.split(" ");
-            ResultSet res = 
+            if (username.contains(" ")) {
+                String[] usernameSplit = username.split(" ");
+                vorname = usernameSplit[0];
+                nachname = usernameSplit[1];
+                
+            } else {
+                vorname = username;
+                nachname = "";
+            }
+            
+             
+                ResultSet res = 
                     DBMaster.getDatabase().getSession().
                             prepareStatement(SQLHelper.AUTHENTICATE_BEWERBER(
-                                    usernameSplit[0], usernameSplit[1], password)
+                                    vorname, nachname, password)
                             ).executeQuery();
-            if (res.next()) {
+            if (res.next() && res.getInt(8) == 1) {
                 return true;
             }
+            
         } catch (SQLException | ArrayIndexOutOfBoundsException ex) {
             return false;
         }
@@ -109,5 +133,28 @@ public class Table_Bewerber extends Table<Bewerber> implements SQLExecution {
             //UIHook here;
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_BERUFSWAHL_COUNT_QUERY());
+        
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Bewerber.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Bewerber.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

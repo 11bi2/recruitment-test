@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Database_Objects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class Antwortmoeglichkeit {
     
-    private int idAntwortMoeglichkeit;
+    private int id;
     private int idAufgaben;
     private String antwortMoeglichkeit1;
     private String antwortMoeglichkeit2;
@@ -24,12 +24,12 @@ public class Antwortmoeglichkeit {
     private String antwortMoeglichkeit4;
     private String antwortMoeglichkeit5;
     
-    public int getIdAntwortMoeglichkeit() {
-        return idAntwortMoeglichkeit;
+    public int getId() {
+        return id;
     }
 
-    public void setIdAntwortMoeglichkeit(int idAntwortMoeglichkeit) {
-        this.idAntwortMoeglichkeit = idAntwortMoeglichkeit;
+    public void getId(int idAntwortMoeglichkeit) {
+        this.id = idAntwortMoeglichkeit;
     }
 
     public int getIdAufgaben() {
@@ -81,7 +81,7 @@ public class Antwortmoeglichkeit {
     }
 
 public Antwortmoeglichkeit(int idAntwortMoeglichkeit, int idAufgaben, String antwortMoeglichkeit1, String antwortMoeglichkeit2, String antwortMoeglichkeit3, String antwortMoeglichkeit4, String antwortMoeglichkeit5){
-        setIdAntwortMoeglichkeit(idAntwortMoeglichkeit);
+        getId(idAntwortMoeglichkeit);
         setIdAufgaben(idAufgaben);
         setAntwortMoeglichkeit1(antwortMoeglichkeit1);
         setAntwortMoeglichkeit2(antwortMoeglichkeit2);

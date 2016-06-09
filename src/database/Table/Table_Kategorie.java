@@ -5,13 +5,15 @@
  */
 package database.Table;
 
-import Classes.Kategorie;
+import Database_Objects.Kategorie;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,7 +34,7 @@ public class Table_Kategorie extends Table<Kategorie>  implements SQLExecution{
 
     @Override
     public void create(Kategorie args) {
-        executeQuery(SQLHelper.INSERT_KATEGORIE_QUERY(args));
+        executeUpdate(SQLHelper.INSERT_KATEGORIE_QUERY(args));
         args.setId(getLastInsertedId());
     }
 
@@ -72,12 +74,12 @@ public class Table_Kategorie extends Table<Kategorie>  implements SQLExecution{
 
     @Override
     public void update(Kategorie args) {
-        executeQuery(SQLHelper.UPDATE_KATEGORIE_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_KATEGORIE_QUERY(args));
     }
 
     @Override
     public void delete(Kategorie args) {
-        executeQuery(SQLHelper.DELETE_KATEGORIE_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_KATEGORIE_QUERY(args));
     }
 
     @Override
@@ -91,6 +93,29 @@ public class Table_Kategorie extends Table<Kategorie>  implements SQLExecution{
             //UIHook here
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_KATEGORIE_COUNT_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Kategorie.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Kategorie.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

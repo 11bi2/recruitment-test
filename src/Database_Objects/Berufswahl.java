@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package Database_Objects;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,22 +16,22 @@ import java.util.logging.Logger;
  */
 public class Berufswahl {
     
-    private int idBerufswahl;
+    private int id;
     private String berufsBeschreibung;
     private String voraussetzung;
     
     public Berufswahl(int idBerufswahl, String berufsBeschreibung, String voraussetzung){
-        setIdBerufswahl(idBerufswahl);
+        setId(idBerufswahl);
         setBerufsBeschreibung(berufsBeschreibung);
         setVoraussetzung(voraussetzung);
     }
 
-    public int getIdBerufswahl() {
-        return idBerufswahl;
+    public int getId() {
+        return id;
     }
 
-    public void setIdBerufswahl(int idBerufswahl) {
-        this.idBerufswahl = idBerufswahl;
+    public void setId(int idBerufswahl) {
+        this.id = idBerufswahl;
     }
 
     public String getBerufsBeschreibung() {

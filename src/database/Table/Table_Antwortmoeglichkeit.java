@@ -5,7 +5,7 @@
  */
 package database.Table;
 
-import Classes.Antwortmoeglichkeit;
+import Database_Objects.Antwortmoeglichkeit;
 import DBMaster.DBMaster;
 import database.Table.Helper.SQLHelper;
 import database.Table.Interface.SQLExecution;
@@ -34,7 +34,7 @@ public class Table_Antwortmoeglichkeit extends Table<Antwortmoeglichkeit> implem
     
     @Override
     public void create(Antwortmoeglichkeit args) {
-        executeQuery(SQLHelper.INSERT_ANTWORTMOEGLICHKTEI_QUERY(args));
+        executeUpdate(SQLHelper.INSERT_ANTWORTMOEGLICHKTEI_QUERY(args));
     }
 
     @Override
@@ -75,12 +75,12 @@ public class Table_Antwortmoeglichkeit extends Table<Antwortmoeglichkeit> implem
 
     @Override
     public void update(Antwortmoeglichkeit args) {
-        executeQuery(SQLHelper.UPDATE_ANTWORTMOEGLICHKEITEN_QUERY(args));
+        executeUpdate(SQLHelper.UPDATE_ANTWORTMOEGLICHKEITEN_QUERY(args));
     }
 
     @Override
     public void delete(Antwortmoeglichkeit args) {
-        executeQuery(SQLHelper.DELETE_ANTWORTMOEGLICHKEIT_QUERY(args));
+        executeUpdate(SQLHelper.DELETE_ANTWORTMOEGLICHKEIT_QUERY(args));
     }
 
     @Override
@@ -91,6 +91,29 @@ public class Table_Antwortmoeglichkeit extends Table<Antwortmoeglichkeit> implem
             Logger.getLogger(Table_Antwortmoeglichkeit.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public int getCount() {
+        try {
+            ResultSet res = executeQuery(SQLHelper.GET_ANTWORTMOEGLICHKEIT_COUNT_QUERY());
+            
+            if (res.next()) {
+                return res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Antwortmoeglichkeit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void executeUpdate(String query) {
+        try {
+            DBMaster.getDatabase().getSession().prepareStatement(query).executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Table_Antwortmoeglichkeit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
