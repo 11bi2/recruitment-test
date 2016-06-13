@@ -77,6 +77,9 @@ public class Aufgabe {
     
     public static Aufgabe fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Aufgabe(res.getInt(1), res.getInt(2), res.getString(3), res.getBlob(4), res.getInt(5));
         } catch (SQLException ex) {
             //UIHook here

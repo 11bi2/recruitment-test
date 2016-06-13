@@ -5,6 +5,7 @@
  */
 package Database_Objects;
 
+import database.Table.Helper.Helper;
 import database.Table.Table_Antwortmoeglichkeit;
 import database.Table.Table_Aufgabe;
 import database.Table.Table_Berufswahl;
@@ -184,8 +185,8 @@ public class SessionManager {
     }
     
     public double getPunktezahlDurchschnitt(){
-        int punkteGesamt = 0;
-        int pruefungenCount = this.getErgebnisse().size();
+        double punkteGesamt = 0;
+        double pruefungenCount = this.getErgebnisse().size();
         
         for(Ergebnis e : ergebnisse){
             punkteGesamt += e.getPunktzahl();
@@ -194,8 +195,8 @@ public class SessionManager {
     }
     
     public double getBestandenDurchschnitt(){
-        int pruefungenCount = this.getErgebnisse().size();
-        int bestandenePruefungen = 0;
+        double pruefungenCount = this.getErgebnisse().size();
+        double bestandenePruefungen = 0;
         
         for(Ergebnis e : ergebnisse){
             if (e.getErgebnis() == 1) {
@@ -203,7 +204,7 @@ public class SessionManager {
             }
         }
         
-        return bestandenePruefungen / pruefungenCount;
+        return pruefungenCount / bestandenePruefungen;
     }
     
     public String[][] resultsToTableSet(){
@@ -214,5 +215,49 @@ public class SessionManager {
         }
         
         return results;
+    }
+    
+    public int getKategorieIdForBerufswahl(int idBerufswahl){
+        for(Kategorie k : kategorien){
+            if (k.getBerufswahlID() == idBerufswahl) {
+                return k.getId();
+            }
+        }
+        return 1;
+    }
+    
+    public ArrayList<Aufgabe> getAufgabenForBewerber(int idKategorie){
+        ArrayList<Aufgabe> aufgabenForKategorie = new ArrayList();
+        ArrayList<Aufgabe> aufgabenForBewerber = new ArrayList();
+        
+        aufgaben.stream().filter((a) -> (a.getIdKategorie() == idKategorie)).forEach((a) -> {
+            aufgabenForKategorie.add(a);
+        });
+        
+        for (int i = 0; i < Helper.maxAufgaben; i++) {
+            int index = Helper.getRandom(aufgabenForKategorie.size());
+            aufgabenForBewerber.add(aufgabenForKategorie.get(index));
+            aufgabenForKategorie.remove(index);
+        }
+        
+        return aufgabenForBewerber;
+    }
+    
+    public Boolean checkAnswer(int aufgabeId, String antwort){
+        for(Loesung l : loesungen){
+            if (l.getAufgabeId() == aufgabeId) {
+                return Helper.decodeString(l.getTextLoesung().trim()).equals(antwort.trim());
+            }
+        }
+        return false;
+    }
+    
+    public Boolean checkEMail(String mail){
+        for(Bewerber b : bewerber){
+            if (b.geteMail().trim().equals(mail.trim())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

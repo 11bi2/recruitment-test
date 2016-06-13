@@ -6,7 +6,6 @@
 package Mail;
 
 import Database_Objects.Bewerber;
-import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.util.Properties;
 import javax.mail.Message;
@@ -22,8 +21,8 @@ import javax.mail.internet.MimeMessage;
  */
 public class Mailer {
     private static final String HOST = "localhost";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static final String USERNAME = "einstellungstest.cobra@gmail.com";
+    private static final String PASSWORD = "Cobra11bi2#";
     private static final String FROM = "admin@bewerbungstest.com";
     
     private static Properties props = System.getProperties();
@@ -33,8 +32,11 @@ public class Mailer {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "465");
-        session = Session.getInstance(props, auth());
+        props.put("mail.smtp.user", USERNAME);
+        props.put("mail.smtp.password", PASSWORD);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        session = Session.getInstance(props, null);
         
         
         MimeMessage msg = new MimeMessage(session);
@@ -42,8 +44,12 @@ public class Mailer {
         msg.setSubject("Your registration");
         msg.addRecipient(Message.RecipientType.TO, InternetAddress.parse(b.geteMail())[0]);
         
-        msg.setText("Your username and Password:");
-        Transport.send(msg);
+        msg.setText("Your username: " + b.getVorName() + " " + b.getNachName() + "\nYour password:" + "1234");
+        Transport transport = session.getTransport("smtp");
+        transport.connect("smtp.gmail.com", USERNAME, PASSWORD);
+        transport.sendMessage(msg, msg.getAllRecipients());
+        transport.close();
+        
     }
     
     private static javax.mail.Authenticator auth(){ 

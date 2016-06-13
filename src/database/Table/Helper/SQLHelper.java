@@ -93,6 +93,7 @@ public class SQLHelper {
     public static final String KEY_LOESUNG_ID = "ID_Loesung";
     public static final String KEY_LOESUNG_AUFGABE_ID = "Aufgaben_ID_Aufgaben";
     public static final String KEY_LOESUNG_LOESUNG = "Text_Loesung";
+    public static final String KEY_LOESUNG_MOEGLICHE_PUNKTE = "MoeglichePunkte";
     
     //Permissions Columns
     private static final String KEY_PERMISSIONS_ID = "ID_Permissions";
@@ -452,10 +453,12 @@ public class SQLHelper {
         return "INSERT INTO " + TABLE_LOESUNG + " " +
                 "(" +
                     KEY_LOESUNG_AUFGABE_ID + ", " +
-                    KEY_LOESUNG_LOESUNG + 
+                    KEY_LOESUNG_LOESUNG + ", " +
+                    KEY_LOESUNG_MOEGLICHE_PUNKTE +
                 ") values('" +
                     l.getAufgabeId() + "', '" +
-                    l.getTextLoesung() +
+                    l.getTextLoesung() + "', '" +
+                    l.getPunkte() +
                 "');";
     }
     
@@ -474,8 +477,9 @@ public class SQLHelper {
     
     public static String UPDATE_LOESUNG_QUERY(Loesung l){
         return "UPDATE " + TABLE_LOESUNG + " SET " +
-                KEY_LOESUNG_AUFGABE_ID + " = " + l.getAufgabeId() + ", " +
-                KEY_LOESUNG_LOESUNG + " = " + l.getTextLoesung() + " " +
+                KEY_LOESUNG_AUFGABE_ID + " = '" + l.getAufgabeId() + "', " +
+                KEY_LOESUNG_LOESUNG + " = '" + l.getTextLoesung() + "', " +
+                KEY_LOESUNG_MOEGLICHE_PUNKTE + " '" + l.getPunkte() + "' " +
                 "WHERE " + KEY_LOESUNG_ID + " = " + l.getId() + ";";
     }
     
@@ -547,7 +551,7 @@ public class SQLHelper {
     }
     
     public static String GET_LAST_INSERTED_SCHWIERIGKEIT_QUERY(){
-        return "SELECT GET_LAST_INSERT_ID() FROM " + TABLE_SCHWIERIGKEIT + ";";
+        return "SELECT LAST_INSERT_ID() FROM " + TABLE_SCHWIERIGKEIT + ";";
     }
     
     public static String GET_SCHWIERIGKEIT_ENTRY_QUERY(int id){
@@ -581,6 +585,8 @@ public class SQLHelper {
      * #########################################################################
      * Ergebnis Query
      * #########################################################################
+     * @param e
+     * @return 
      */
     
         public static String INSERT_ERGEBNIS_QUERY(Ergebnis e){
@@ -589,14 +595,14 @@ public class SQLHelper {
                 KEY_ERGEBNIS_DATUM + ", " +
                 KEY_ERGEBNIS_PUNKTZAHL + ", " +
                 KEY_ERGEBNIS_ERGEBNIS + ") values('" +
-                e.getId_Bewerber() + "', " +
-                e.getPruefungsDatum() + "', " +
-                e.getPunktzahl()+ "', " +
+                e.getId_Bewerber() + "', '" +
+                e.getPruefungsDatum() + "', '" +
+                e.getPunktzahl()+ "', '" +
                 e.getErgebnis()+ "');";
     }
     
     public static String GET_LAST_INSERTED_ERGEBNIS_QUERY(){
-        return "SELECT GET_LAST_INSERT_ID() FROM " + TABLE_ERGEBNIS + ";";
+        return "SELECT LAST_INSERT_ID() FROM " + TABLE_ERGEBNIS + ";";
     }
     
     public static String GET_ERGEBNIS_ENTRY_QUERY(int id){

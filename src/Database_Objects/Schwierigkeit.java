@@ -62,6 +62,9 @@ public class Schwierigkeit {
     
     public static Schwierigkeit fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Schwierigkeit(res.getInt(1), res.getInt(2), res.getInt(3), res.getInt(4));
         } catch (SQLException ex) {
             Logger.getLogger(Schwierigkeit.class.getName()).log(Level.SEVERE, null, ex);

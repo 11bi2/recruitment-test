@@ -93,6 +93,9 @@ public Antwortmoeglichkeit(int idAntwortMoeglichkeit, int idAufgaben, String ant
 
 public static Antwortmoeglichkeit fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Antwortmoeglichkeit(res.getInt(1), res.getInt(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7));
         } catch (SQLException ex) {
             Logger.getLogger(Antwortmoeglichkeit.class.getName()).log(Level.SEVERE, null, ex);

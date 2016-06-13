@@ -125,10 +125,9 @@ public class Bewerber {
         try {
             if (res.isBeforeFirst()) {
                 res.next();
-                return new Bewerber(res.getInt(1), res.getInt(2), res.getInt(3), res.getString(4), res.getString(5), res.getDate(6), res.getString(7), res.getInt(8), res.getString(9));            
-            }else{
-                return new Bewerber(res.getInt(1), res.getInt(2), res.getInt(3), res.getString(4), res.getString(5), res.getDate(6), res.getString(7), res.getInt(8), res.getString(9));            
             }
+                return new Bewerber(res.getInt(1), res.getInt(2), res.getInt(3), res.getString(4), res.getString(5), res.getDate(6), res.getString(7), res.getInt(8), res.getString(9));            
+            
                 
         } catch (SQLException ex) {
             //UIHook here

@@ -52,6 +52,9 @@ public class Eingabe {
     
     public static Eingabe fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Eingabe(res.getInt(1), res.getInt(2), res.getString(3));
         } catch (SQLException ex) {
             //UIHook here

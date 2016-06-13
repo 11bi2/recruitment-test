@@ -18,6 +18,7 @@ public class Loesung {
     private int id;
     private int aufgabeId;
     private String textLoesung;
+    private int punkte;
     
     public Loesung(){
         this(0, 0, "");
@@ -30,6 +31,16 @@ public class Loesung {
         this.aufgabeId = aufgabeId;
         this.textLoesung = textLoesung;
     }
+
+    public Loesung(int id, int aufgabeId, String textLoesung, int punkte) {
+        this.id = id;
+        this.aufgabeId = aufgabeId;
+        this.textLoesung = textLoesung;
+        this.punkte = punkte;
+    }
+    
+    
+    
 
     public int getId() {
         return id;
@@ -49,10 +60,23 @@ public class Loesung {
     public void setTextLoesung(String textLoesung) {
         this.textLoesung = textLoesung;
     }
+
+    public int getPunkte() {
+        return punkte;
+    }
+
+    public void setPunkte(int punkte) {
+        this.punkte = punkte;
+    }
+    
+    
     
     public static Loesung fromResultSet(ResultSet res){
         try {
-            return new Loesung(res.getInt(1), res.getInt(2), res.getString(3));
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
+            return new Loesung(res.getInt(1), res.getInt(2), res.getString(3), res.getInt(4));
         } catch (SQLException ex) {
             //UIHook here
         }

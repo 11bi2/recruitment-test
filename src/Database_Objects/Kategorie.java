@@ -70,6 +70,10 @@ public class Kategorie {
     
     public static Kategorie fromResultSet(ResultSet res){
         try {    
+            
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Kategorie(
                     res.getInt(1), res.getInt(2), 
                     res.getInt(3), res.getString(4), 

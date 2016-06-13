@@ -42,6 +42,9 @@ public class Permissions {
     
     public static Permissions fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Permissions(res.getInt(1), res.getString(2));
         } catch (SQLException ex) {
             Logger.getLogger(Permissions.class.getName()).log(Level.SEVERE, null, ex);

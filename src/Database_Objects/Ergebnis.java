@@ -19,11 +19,13 @@ public class Ergebnis {
     
     private int id;
     private int id_Bewerber;
-    private Date pruefungsDatum;
+    private String pruefungsDatum;
     private int punktzahl;
     private int ergebnis;
 
-    public Ergebnis(int id, int id_Bewerber, Date pruefungsDatum, int punktzahl, int ergebnis) {
+    public Ergebnis(){}
+    
+    public Ergebnis(int id, int id_Bewerber, String pruefungsDatum, int punktzahl, int ergebnis) {
         this.id = id;
         this.id_Bewerber = id_Bewerber;
         this.pruefungsDatum = pruefungsDatum;
@@ -49,11 +51,11 @@ public class Ergebnis {
         this.id_Bewerber = id_Bewerber;
     }
 
-    public Date getPruefungsDatum() {
+    public String getPruefungsDatum() {
         return pruefungsDatum;
     }
 
-    public void setPruefungsDatum(Date pruefungsDatum) {
+    public void setPruefungsDatum(String pruefungsDatum) {
         this.pruefungsDatum = pruefungsDatum;
     }
 
@@ -75,7 +77,10 @@ public class Ergebnis {
     
     public static Ergebnis fromResultSet(ResultSet res){
         try {
-            return new Ergebnis(res.getInt(1), res.getInt(2), res.getDate(3), res.getInt(4), res.getInt(5));
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
+            return new Ergebnis(res.getInt(1), res.getInt(2), res.getString(3), res.getInt(4), res.getInt(5));
         } catch (SQLException ex) {
             Logger.getLogger(Ergebnis.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -94,7 +99,7 @@ public class Ergebnis {
             enroled = "Durchgefallen";
         }
         
-        String[] tableArray = {bewerber.getVorName(), bewerber.getNachName(), berufsWahl.getBerufsBeschreibung(), this.getPruefungsDatum().toString(), this.getPunktzahl() + "", enroled};
+        String[] tableArray = {bewerber.getVorName(), bewerber.getNachName(), berufsWahl.getBerufsBeschreibung(), this.getPruefungsDatum(), this.getPunktzahl() + "", enroled};
          
         return tableArray;
          

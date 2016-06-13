@@ -2,6 +2,8 @@ package Swift_GUI;
 import Database_Objects.Bewerber;
 import Database_Objects.SessionManager;
 import Mail.Mailer;
+import Security.Crypt;
+import database.Table.Helper.Helper;
 import database.Table.Table_Bewerber;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -48,6 +50,7 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Font;
+import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -337,23 +340,37 @@ public class administrator {
                     try {
                         int permission;
 
-                        if (cbPermission.getSelectedItem().toString().equals("Administrator")) {
-                            permission = 1;
+                        if (SessionManager.getInstance().checkEMail(tfNewBewerberEmail.getText())) {
+                            
+                            if (cbPermission.getSelectedItem().toString().equals("Administrator")) {
+                                permission = 1;
+                            }else {
+                                permission = 2;
+                            }
+                            SimpleDateFormat myFormat = new SimpleDateFormat("yyyy.MM.dd");
+
+                            Bewerber newBewerber = new Bewerber(permission, 1, tfNewBewerberVorname.getText(), tfNewBewerberNachname.getText(), myFormat.parse(tfNewBewerberGeburtstag.getText()), tfNewBewerberEmail.getText(), 1, Crypt.encrypt("1234"));
+
+                            Table_Bewerber.getInstance().create(newBewerber);
+
+                            if (Helper.checkInet()) {
+                                Mailer.sendMail(newBewerber);
+                                 JOptionPane.showMessageDialog(null, "Bewerber wurde erfolgreich erstellt und benarichtigt.", "Erfolg", JOptionPane.PLAIN_MESSAGE);
+                            }else {
+                                JOptionPane.showMessageDialog(null, "Bewerber wurde erfolgreich erstellt, es konnte aber keine Mail gesendet werden, da Sie keinen Internetzugriff haben. Bitte holen Sie dies bald möglich nach!", "Warnung", JOptionPane.PLAIN_MESSAGE);
+                            }
+                            
+                            
+                           
                         }else {
-                            permission = 2;
+                            JOptionPane.showMessageDialog(null, "Ein User mit dieser E-Mail existiert bereits!", "Fehler", JOptionPane.ERROR_MESSAGE);
                         }
-                        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy.MM.dd");
-
-                        Bewerber newBewerber = new Bewerber(permission, 1, tfNewBewerberVorname.getText(), tfNewBewerberNachname.getText(), myFormat.parse(tfNewBewerberGeburtstag.getText()), tfNewBewerberEmail.getText(), 1, "1234");
-
-                        Table_Bewerber.getInstance().create(newBewerber);
-
-                        Mailer.sendMail(newBewerber);
                         
-                        JOptionPane.showMessageDialog(null, "Bewerber wurde erfolgreich erstellt und benarichtigt.", "Erfolg", JOptionPane.PLAIN_MESSAGE);
-                    } catch (MessagingException | ParseException ex) {
+                        
+                        } catch (ParseException | MessagingException ex) {
                         Logger.getLogger(administrator.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                 });
 		layeredPane_1.add(btnErstellen, "cell 1 7,growx");
 	}

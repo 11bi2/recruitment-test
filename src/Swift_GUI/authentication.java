@@ -15,9 +15,11 @@ import javax.swing.UIManager;
 import javax.swing.JTextField;
 
 import DBMaster.DBMaster;
+import Database_Objects.Aufgabe;
 import Database_Objects.Bewerber;
+import Security.Crypt;
 import database.Table.Table_Bewerber;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 public class authentication {
@@ -25,6 +27,7 @@ public class authentication {
 	private JFrame frame;
 	private JTextField field_user_id;
 	private JTextField field_user_password;
+        private SessionManager sessionManager;
 
 	/**
 	 * Launch the application.
@@ -65,7 +68,7 @@ public class authentication {
 		JTextPane txtpnLoremIpsumDolor = new JTextPane();
 		txtpnLoremIpsumDolor.setEditable(false);
 		txtpnLoremIpsumDolor.setBackground(UIManager.getColor("Button.background"));
-		txtpnLoremIpsumDolor.setText("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
+		txtpnLoremIpsumDolor.setText("Cobra Einstellungstest\nVersion 1.0\nGUI: Florain \nBackend: Sebastian Riga \nDatenbank & Fragen: Dario Seel, Oliver Hofmann");
 		txtpnLoremIpsumDolor.setBounds(12, 12, 424, 156);
 		frame.getContentPane().add(txtpnLoremIpsumDolor);
 
@@ -90,51 +93,33 @@ public class authentication {
                 DBMaster.getDatabase().startSession("localhost", 3306, "root", "");
                 
 		JButton btnNewButton = new JButton("Verbindung aufbauen ...");
-
-		/*btnNewButton.addActionListener((ActionEvent arg0) -> {
-                    if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
-                        
-                        JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                        
-                    }else {
-                        
-                        boolean isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
-                        if (isValidUser){
-                            JOptionPane.showMessageDialog(null, "Erfolgreich angemeldet.");
-                            SessionManager.getInstance();
-                            frame.dispose();
-                            administrator nw = new administrator();
-                            administrator.AdministratorWindow();
-                            
-                        }else{
-                            JOptionPane.showMessageDialog(null, "Either your credentials are wrong or your account hasn't been activated by an administrator yet!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                });*/
-                        
 		btnNewButton.addActionListener((ActionEvent arg0) -> {
                     if (field_user_id.getText().isEmpty() || field_user_password.getText().isEmpty()) {
                         
                         //TODO: User | Admin
                         // Just for testing: Login without any login credentials.
-                        // JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else {
+                        JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    }else {
                         
-                        Bewerber isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), field_user_password.getText());
+                        Bewerber isValidUser = Table_Bewerber.authenticate(field_user_id.getText(), Crypt.encrypt(field_user_password.getText()));
                         if (isValidUser != null){
+                            sessionManager = SessionManager.getInstance();
                             
-                            if (isValidUser.getIdPermisson() == 1) {
+                            if (isValidUser.getIdPermisson() == 1 && isValidUser.getFreigabe() == 1) {
                                 JOptionPane.showMessageDialog(null, "Willkommen Administrator " + isValidUser.getVorName());
-                                SessionManager.getInstance();
                                 frame.dispose();
                                 administrator nw = new administrator();
                                 administrator.AdministratorWindow();
-                            }else {
+                            }else if(isValidUser.getIdPermisson() == 2 && isValidUser.getFreigabe() == 1) {
                                 JOptionPane.showMessageDialog(null, "Willkommen " + isValidUser.getVorName() + " " + isValidUser.getNachName() + ".\nViel glück bei Ihrem Test!");
                                 frame.dispose();
-                                //UserWindow uw = new UserWindow(null);
-                                UserWindow.UserWindow(isValidUser, null);
+                                
+                                ArrayList<Aufgabe> aufgaben = sessionManager.getAufgabenForBewerber(sessionManager.getKategorieIdForBerufswahl(isValidUser.getIdBerufswahl()));
+
+                                UserWindow uw = new UserWindow(isValidUser, aufgaben, sessionManager);
+                                UserWindow.UserWindow(isValidUser, aufgaben, sessionManager);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Your account hasn't been activated!", "Login Error", JOptionPane.ERROR_MESSAGE);
                             }
                         }else{
                             JOptionPane.showMessageDialog(null, "Either your username or password are wrong!", "Login Error", JOptionPane.ERROR_MESSAGE);

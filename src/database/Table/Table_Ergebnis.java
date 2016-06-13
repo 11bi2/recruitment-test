@@ -34,7 +34,7 @@ public class Table_Ergebnis extends Table<Ergebnis> implements SQLExecution {
     
     @Override
     public void create(Ergebnis args) {
-        executeUpdate(SQLHelper.UPDATE_ERGEBNIS_QUERY(args));
+        executeUpdate(SQLHelper.INSERT_ERGEBNIS_QUERY(args));
         args.setId(this.getLastInsertedId());
     }
 

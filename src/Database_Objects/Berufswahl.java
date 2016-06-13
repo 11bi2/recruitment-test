@@ -52,6 +52,9 @@ public class Berufswahl {
     
     public static Berufswahl fromResultSet(ResultSet res){
         try {
+            if (res.isBeforeFirst()) {
+                res.next();
+            }
             return new Berufswahl(res.getInt(1), res.getString(2), res.getString(3));
         } catch (SQLException ex) {
             Logger.getLogger(Berufswahl.class.getName()).log(Level.SEVERE, null, ex);

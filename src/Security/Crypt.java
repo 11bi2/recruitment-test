@@ -25,6 +25,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -37,13 +39,13 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class Crypt {
     
-    private BigInteger hexConv;
-    private Cipher aesCipher;
-    private SecretKeySpec keySpec;
-    private byte encryptedBytes[];
-    private MessageDigest sha256Encryption;
+    private static BigInteger hexConv;
+    private static Cipher aesCipher;
+    private static SecretKeySpec keySpec;
+    private static byte encryptedBytes[];
+    private static MessageDigest sha256Encryption;
     
-    private void writePasswordToFile(String password){
+    private  static void writePasswordToFile(String password){
         File configTxt = new File("user.dir/Test/config.txt");
         List<String> lines = Arrays.asList(password);
         Path path = Paths.get(URI.create(configTxt.getAbsolutePath()));
@@ -60,7 +62,7 @@ public class Crypt {
         }
     }
     
-    private String readPasswordFromFile(){
+    private static String readPasswordFromFile(){
         File configTxt = new File("user.dir/Test/config.txt");
         Path path = Paths.get(URI.create(configTxt.getAbsolutePath()));
         
@@ -77,30 +79,30 @@ public class Crypt {
         return "";
     }
     
-    private String getMac(){
+    private static String getMac(){
         try {
             byte[] mac;
-            
             InetAddress myIp = InetAddress.getLocalHost();
-            
             NetworkInterface networkInterface = NetworkInterface.getByInetAddress(myIp);
             
-            mac = networkInterface.getHardwareAddress();
-            
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < mac.length; i++) {
-                builder.append(String.format("%02Xs", mac[i], (i < mac.length -1) ? ":" : ""));
+            if (networkInterface != null) {
+
+                mac = networkInterface.getHardwareAddress();
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < mac.length; i++) {
+                    builder.append(String.format("%02Xs", mac[i], (i < mac.length -1) ? ":" : ""));
+                }
+                return builder.toString();
+            }else {
+                return "5c:26:0a:03:14:e5 ";
             }
-            
-            return builder.toString();
         } catch (SocketException | UnknownHostException ex) {
-            //UIHook here
+            Logger.getLogger(Crypt.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return "";
     }
     
-    public void encrypt(String password){
+    public static String encrypt(String password){
 
         try {
             sha256Encryption = MessageDigest.getInstance("SHA-256");
@@ -115,16 +117,16 @@ public class Crypt {
             
             hexConv = new BigInteger(aesCipher.doFinal(password.getBytes()));
             
-            writePasswordToFile(hexConv.toString(16));
+            return hexConv.toString(16);
             
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             //UIHook here
         }
-        
+        return "";
     };
     
-    public String decrypt(){
-        String encryptedPassword = readPasswordFromFile();
+    public static String decrypt(String password){
+        String encryptedPassword = password;
         
         try {
             sha256Encryption = MessageDigest.getInstance("SHA-256");

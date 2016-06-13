@@ -14,6 +14,7 @@
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Database_Objects/Eingabe.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Mail/Mailer.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Database_Objects/SessionManager.java</file>
+            <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Helper/Helper.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/DBMaster/DBMaster.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Table.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Security/Crypt.java</file>
@@ -24,6 +25,7 @@
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Database_Objects/Berufswahl.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Table_Kategorie.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Helper/SQLHelper.java</file>
+            <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Interface/NtoM.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Swift_GUI/authentication.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/database/Table/Table_Berufswahl.java</file>
             <file>file:/home/sriga/NetBeansProjects/RecruitmentTest/recruitment-test/src/Database_Objects/Schwierigkeit.java</file>
